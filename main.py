@@ -72,9 +72,7 @@ async def main():
         return
 
     if not args.file:
-        print(
-            "Error: You must specify a JSON input file using --file, or both --theme and --level to generate a prompt."
-        )
+        parser.print_help()
         sys.exit(1)
 
     json_filepath = args.file
