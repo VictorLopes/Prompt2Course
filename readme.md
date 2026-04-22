@@ -18,6 +18,12 @@ Or manually:
 python -m pip install -r requirements.txt
 ```
 
+or
+
+```bash
+./python3/bin/python -m pip install -r requirements.txt
+```
+
 ---
 
 ## 🛠️ Usage Modes
@@ -30,7 +36,13 @@ The script generates a structured prompt in English (for better performance with
 
 **Command:**
 ```bash
-python main.py --theme "Checking into a hotel" --level A2
+./python3/bin/python main.py --theme "Checking into a hotel" --level A2
+```
+
+or
+
+```bash
+./python3/bin/python main.py --theme "Checking into a hotel" --level A2 --native en_us --target pt_br
 ```
 
 **Optional Parameters:**
@@ -48,7 +60,13 @@ Transform the JSON file returned by the AI into a narrated lesson.
 
 **Command:**
 ```bash
-python main.py --file lesson.json
+./python3/bin/python main.py --file lesson.json
+```
+
+or
+
+```bash
+./python3/bin/python main.py --file lesson.json --native en_us --target pt_br
 ```
 
 **Optional Parameters:**
