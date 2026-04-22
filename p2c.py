@@ -40,10 +40,10 @@ def validate_lesson_json(data: Dict[str, Any], native_lang: str, target_lang: st
             )
 
     if errors:
-        print("\n❌ Errors found in the AI-generated JSON:")
+        print("\n Errors found in the AI-generated JSON:")
         for err in errors:
             print(f"   • {err}")
-        print("\n💡 Tip: Ask the LLM to regenerate using the exact prompt from the README.")
+        print("\n Tip: Ask the LLM to regenerate using the exact prompt from the README.")
         print("   Or fix the JSON file manually.")
         sys.exit(1)
 
@@ -140,24 +140,24 @@ async def main():
         try:
             curso_data = json.loads(args.json)
         except json.JSONDecodeError as e:
-            print(f"❌ JSON syntax error in --json string (likely a missing comma or quote):")
+            print(f"JSON syntax error in --json string (likely a missing comma or quote):")
             print(f"   {e}")
-            print("\n💡 Tip: Paste the JSON into https://jsonlint.com to find the issue.")
+            print("\n Tip: Paste the JSON into https://jsonlint.com to find the issue.")
             sys.exit(1)
         output_filename = "lesson.mp3"
     else:
         json_filepath = args.file
         if not os.path.exists(json_filepath):
-            print(f"❌ Error: File '{json_filepath}' not found.")
+            print(f" Error: File '{json_filepath}' not found.")
             sys.exit(1)
 
         with open(json_filepath, "r", encoding="utf-8") as f:
             try:
                 curso_data = json.load(f)
             except json.JSONDecodeError as e:
-                print(f"❌ JSON syntax error in '{json_filepath}' (likely a missing comma or quote):")
+                print(f" JSON syntax error in '{json_filepath}' (likely a missing comma or quote):")
                 print(f"   {e}")
-                print("\n💡 Tip: Paste the JSON into https://jsonlint.com to find the issue.")
+                print("\n Tip: Paste the JSON into https://jsonlint.com to find the issue.")
                 sys.exit(1)
 
         base_name = os.path.splitext(os.path.basename(json_filepath))[0]
@@ -174,11 +174,11 @@ async def main():
         )
         await generator.build_lesson()
     except KeyError as e:
-        print(f"❌ JSON structure error: key {e} not found.")
+        print(f"JSON structure error: key {e} not found.")
         print("   This usually happens when the LLM didn't follow the exact format.")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Unexpected error during generation: {type(e).__name__}: {e}")
+        print(f" Unexpected error during generation: {type(e).__name__}: {e}")
         sys.exit(1)
     finally:
         clear_cache()
