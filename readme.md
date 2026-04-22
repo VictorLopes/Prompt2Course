@@ -7,7 +7,7 @@ Inspirado pela eficácia da metodologia Pimsleur, focada em diálogos práticos 
 ### Passo 1
 
 ```
-./ setup.sh 
+./setup.sh 
 ```
 
 ou
