@@ -2,19 +2,25 @@ import json
 import asyncio
 import os
 import sys
+import argparse
 from generator import CourseGenerator, clear_cache, AUDIO_CACHE_DIR
-
-NATIVE_LANG = "pt_br"
-TARGET_LANG = "en_us"
 
 
 async def main():
-    if len(sys.argv) < 2:
-        print("Error: You need to specify a JSON input file.")
-        print("Usage: python main.py <filename.json>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Generate an audio course from a JSON file."
+    )
+    parser.add_argument("--file", required=True, help="Path to the JSON input file.")
+    parser.add_argument(
+        "--native", default="pt_br", help="Native language (default: pt_br)."
+    )
+    parser.add_argument(
+        "--target", default="en_us", help="Target language (default: en_us)."
+    )
 
-    json_filepath = sys.argv[1]
+    args = parser.parse_args()
+
+    json_filepath = args.file
 
     if not os.path.exists(json_filepath):
         print(f"Error: The file '{json_filepath}' was not found.")
@@ -35,7 +41,7 @@ async def main():
 
     try:
         generator = CourseGenerator(
-            curso_data, NATIVE_LANG, TARGET_LANG, output_filename
+            curso_data, args.native, args.target, output_filename
         )
         await generator.build_lesson()
     finally:
