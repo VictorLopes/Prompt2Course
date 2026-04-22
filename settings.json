@@ -1,0 +1,34 @@
+{
+    "voices": {
+        "pt_br": {
+            "narrator": "pt-BR-AntonioNeural",
+            "person_1": "pt-BR-FranciscaNeural",
+            "person_2": "pt-BR-AntonioNeural"
+        },
+        "en_us": {
+            "narrator": "en-US-JennyNeural",
+            "person_1": "en-US-JennyNeural",
+            "person_2": "en-US-GuyNeural"
+        },
+        "es_es": {
+            "narrator": "es-ES-AlvaroNeural",
+            "person_1": "es-ES-ElviraNeural",
+            "person_2": "es-ES-AlvaroNeural"
+        },
+        "fr_fr": {
+            "narrator": "fr-FR-HenriNeural",
+            "person_1": "fr-FR-DeniseNeural",
+            "person_2": "fr-FR-HenriNeural"
+        },
+        "it_it": {
+            "narrator": "it-IT-DiegoNeural",
+            "person_1": "it-IT-ElsaNeural",
+            "person_2": "it-IT-DiegoNeural"
+        },
+        "de_de": {
+            "narrator": "de-DE-ConradNeural",
+            "person_1": "de-DE-KatjaNeural",
+            "person_2": "de-DE-ConradNeural"
+        }
+    }
+}

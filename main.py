@@ -17,7 +17,7 @@ Your task is to generate a language lesson script in strict JSON format, focused
    - The arrays `target_words_{native_lang}` and `target_words_{target_lang}` must have EXACTLY the same size.
    - The word at index 0 of one array must be the exact translation of the word at index 0 of the other array.
    - Use words in their infinitive or base form unless a specific conjugation is the focus of the lesson.
-4. Voices: Define standard Microsoft neural voices (Edge TTS) compatible with the chosen languages. The Narrator always speaks in the native language. "person_1" and "person_2" speak in the target language.
+4. Voices: Use the following Microsoft neural voices (Edge TTS) already selected for this lesson. The Narrator always speaks in the native language. "person_1" and "person_2" speak in the target language.
 
 ### LANGUAGES:
 - Native Language: {native_lang}
@@ -38,9 +38,9 @@ You must return ONLY a valid JSON, without any additional text, explanations, or
     "target_words_{native_lang}": ["word1", "word2", "word3"],
     "target_words_{target_lang}": ["word1", "word2", "word3"],
     "voices": {{
-        "narrator": "Narrator voice in native language",
-        "person_1": "Person 1 voice in target language",
-        "person_2": "Person 2 voice in target language"
+        "narrator": "{narrator_voice}",
+        "person_1": "{person_1_voice}",
+        "person_2": "{person_2_voice}"
     }}
 }}"""
 
@@ -61,12 +61,24 @@ async def main():
 
     args = parser.parse_args()
 
+    # Load settings
+    base_path = os.path.dirname(__file__)
+    settings_path = os.path.join(base_path, "settings.json")
+    with open(settings_path, "r", encoding="utf-8") as f:
+        settings = json.load(f)
+
     if args.theme and args.level:
+        native_voices = settings["voices"].get(args.native, settings["voices"]["pt_br"])
+        target_voices = settings["voices"].get(args.target, settings["voices"]["en_us"])
+
         prompt = PROMPT_TEMPLATE.format(
             level=args.level,
             theme=args.theme,
             native_lang=args.native,
             target_lang=args.target,
+            narrator_voice=native_voices["narrator"],
+            person_1_voice=target_voices["person_1"],
+            person_2_voice=target_voices["person_2"],
         )
         print(prompt)
         return
