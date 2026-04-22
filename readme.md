@@ -1,6 +1,8 @@
 # Prompt2Course 🎧
 
-Audio language lesson generator (MP3) inspired by the Pimsleur methodology. Use AI to create custom dialogues and transform them into interactive lessons with spaced repetition.
+Audio language lesson generator (MP3) inspired by the Pimsleur methodology. Use AI to create custom dialogues and transform them into interactive lessons with spaced repetition. If you would like to use another TTS engine, please refer to [edge-tts](https://github.com/rany2/edge-tts).
+
+Maybe you wish a more professional already created course. In this case, you should consider buying [Pimsleur's courses](https://www.pimsleur.com/).
 
 ## 🚀 Getting Started
 
@@ -56,15 +58,19 @@ or
 
 ### 2. Generate the MP3 Course
 
-Transform the JSON file returned by the AI into a narrated lesson.
+Transform the JSON returned by the AI into a narrated lesson. You can either pass a file path or the JSON string directly.
 
-**Command:**
+**Using a file:**
 ```bash
 ./python3/bin/python p2c.py --file lesson.json
 ```
 
-or
+**Using a JSON string:**
+```bash
+./python3/bin/python p2c.py --json '{"pt_br": [...], "en_us": [...], "target_words_pt_br": [...], "target_words_en_us": [...], "voices": {...}}'
+```
 
+**Full example with language flags:**
 ```bash
 ./python3/bin/python p2c.py --file lesson.json --native en_us --target pt_br
 ```

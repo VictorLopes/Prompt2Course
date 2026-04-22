@@ -50,6 +50,7 @@ async def main():
         description="Generate an audio course from a JSON file or create an LLM prompt."
     )
     parser.add_argument("--file", help="Path to the JSON input file.")
+    parser.add_argument("--json", help="Full JSON string for the lesson.")
     parser.add_argument(
         "--native", default="pt_br", help="Native language (default: pt_br)."
     )
@@ -87,25 +88,33 @@ async def main():
         print(prompt)
         return
 
-    if not args.file:
+    if not args.file and not args.json:
+        print("Error: You must provide either --file or --json.")
         parser.print_help()
         sys.exit(1)
 
-    json_filepath = args.file
-
-    if not os.path.exists(json_filepath):
-        print(f"Error: The file '{json_filepath}' was not found.")
-        sys.exit(1)
-
-    with open(json_filepath, "r", encoding="utf-8") as f:
+    if args.json:
         try:
-            curso_data = json.load(f)
+            curso_data = json.loads(args.json)
         except json.JSONDecodeError:
-            print(f"Error: The file '{json_filepath}' is not a valid JSON.")
+            print("Error: The provided --json string is not a valid JSON.")
+            sys.exit(1)
+        output_filename = "lesson.mp3"
+    else:
+        json_filepath = args.file
+        if not os.path.exists(json_filepath):
+            print(f"Error: The file '{json_filepath}' was not found.")
             sys.exit(1)
 
-    base_name = os.path.splitext(os.path.basename(json_filepath))[0]
-    output_filename = f"{base_name}.mp3"
+        with open(json_filepath, "r", encoding="utf-8") as f:
+            try:
+                curso_data = json.load(f)
+            except json.JSONDecodeError:
+                print(f"Error: The file '{json_filepath}' is not a valid JSON.")
+                sys.exit(1)
+
+        base_name = os.path.splitext(os.path.basename(json_filepath))[0]
+        output_filename = f"{base_name}.mp3"
 
     clear_cache()
     os.makedirs(AUDIO_CACHE_DIR, exist_ok=True)
