@@ -2,6 +2,7 @@ import os
 import shutil
 import hashlib
 import random
+import json
 import edge_tts
 from pydub import AudioSegment
 
@@ -48,6 +49,18 @@ class CourseGenerator:
         self.introduced_words = set()
         self.word_voices = {}
 
+        self.translations = self._load_translations()
+
+    def _load_translations(self):
+        base_path = os.path.dirname(__file__)
+        translations_path = os.path.join(base_path, "translations.json")
+        with open(translations_path, "r", encoding="utf-8") as f:
+            all_translations = json.load(f)
+        return all_translations.get(self.native_lang, all_translations["pt_br"])
+
+    def t(self, key, **kwargs):
+        return self.translations.get(key, "").format(**kwargs)
+
     async def add_narrator(self, text):
         voice = self.data["voices"]["narrator"]
         audio = await generate_tts(text, voice, "nar")
@@ -69,7 +82,7 @@ class CourseGenerator:
     async def build_lesson(self):
         print(f"Starting creating course: {self.output_filename}")
 
-        await self.add_narrator("Escute esta conversa.")
+        await self.add_narrator(self.t("listen_conversation"))
         for i in range(len(self.data[self.target_lang])):
             target_entry = self.data[self.target_lang][i]
             person = list(target_entry.keys())[0]
@@ -91,7 +104,7 @@ class CourseGenerator:
 
             self.introduced_phrases.add(i)
 
-            await self.add_narrator(f"Como se diz: {native_text}?")
+            await self.add_narrator(self.t("how_to_say", text=native_text))
             self.lesson_audio += create_silence(2)
 
             await self.play_and_repeat(target_text, voice, "phrase", i, repeats=2)
@@ -105,7 +118,7 @@ class CourseGenerator:
                     self.introduced_words.add(w_idx)
                     self.word_voices[w_idx] = voice
 
-                    await self.add_narrator(f"Como se diz a palavra: {native_word}?")
+                    await self.add_narrator(self.t("how_to_say_word", word=native_word))
                     self.lesson_audio += create_silence(1.5)
                     await self.play_and_repeat(
                         target_word, voice, "word", w_idx, repeats=2
@@ -114,7 +127,7 @@ class CourseGenerator:
             if i > 0:
                 await self.do_review()
 
-        await self.add_narrator("Agora, vamos revisar o que aprendemos hoje.")
+        await self.add_narrator(self.t("let_us_review"))
 
         while True:
             phrases_done = all(
@@ -133,7 +146,7 @@ class CourseGenerator:
 
             await self.do_review()
 
-        await self.add_narrator("Fim da lição. Amanhã, pratique novamente.")
+        await self.add_narrator(self.t("end_lesson"))
 
         print(f"Exporting final audio to '{self.output_filename}'...")
         self.lesson_audio.export(self.output_filename, format="mp3")
@@ -160,9 +173,7 @@ class CourseGenerator:
             target_word = self.data[f"target_words_{self.target_lang}"][idx]
             voice = self.word_voices[idx]
 
-            await self.add_narrator(
-                f"Você lembra como se diz a palavra: {native_word}?"
-            )
+            await self.add_narrator(self.t("remember_how_to_say_word", word=native_word))
             self.lesson_audio += create_silence(2)
             await self.play_and_repeat(target_word, voice, "word", idx, repeats=1)
 
@@ -175,6 +186,6 @@ class CourseGenerator:
             target_text = target_entry[person]
             voice = self.data["voices"][person]
 
-            await self.add_narrator(f"Você lembra como se diz: {native_text}?")
+            await self.add_narrator(self.t("remember_how_to_say", text=native_text))
             self.lesson_audio += create_silence(2.5)
             await self.play_and_repeat(target_text, voice, "phrase", idx, repeats=1)

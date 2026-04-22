@@ -1,0 +1,20 @@
+{
+  "pt_br": {
+    "listen_conversation": "Escute esta conversa.",
+    "how_to_say": "Como se diz: {text}?",
+    "how_to_say_word": "Como se diz a palavra: {word}?",
+    "let_us_review": "Agora, vamos revisar o que aprendemos hoje.",
+    "end_lesson": "Fim da lição. Amanhã, pratique novamente.",
+    "remember_how_to_say_word": "Você lembra como se diz a palavra: {word}?",
+    "remember_how_to_say": "Você lembra como se diz: {text}?"
+  },
+  "en_us": {
+    "listen_conversation": "Listen to this conversation.",
+    "how_to_say": "How do you say: {text}?",
+    "how_to_say_word": "How do you say the word: {word}?",
+    "let_us_review": "Now, let's review what we learned today.",
+    "end_lesson": "End of lesson. Tomorrow, practice again.",
+    "remember_how_to_say_word": "Do you remember how to say the word: {word}?",
+    "remember_how_to_say": "Do you remember how to say: {text}?"
+  }
+}
