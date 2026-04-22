@@ -80,6 +80,10 @@ async def main():
             person_1_voice=target_voices["person_1"],
             person_2_voice=target_voices["person_2"],
         )
+        print("\n" + "=" * 60)
+        print("COPY AND PASTE THE PROMPT BELOW INTO YOUR FAVORITE AI")
+        print("(ChatGPT, Gemini, Claude, etc.) TO GENERATE YOUR LESSON JSON:")
+        print("=" * 60 + "\n")
         print(prompt)
         return
 
