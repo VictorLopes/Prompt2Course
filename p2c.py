@@ -3,7 +3,50 @@ import asyncio
 import os
 import sys
 import argparse
+from typing import Dict, Any
 from generator import CourseGenerator, clear_cache, AUDIO_CACHE_DIR
+
+def validate_lesson_json(data: Dict[str, Any], native_lang: str, target_lang: str) -> None:
+    """Validates AI-generated JSON and raises clear, actionable errors."""
+    errors = []
+
+    required_keys = [
+        "voices", native_lang, target_lang,
+        f"target_words_{native_lang}", f"target_words_{target_lang}",
+    ]
+    for key in required_keys:
+        if key not in data:
+            errors.append(f"Missing required key: '{key}'")
+
+    if "voices" in data:
+        if "narrator" not in data["voices"]:
+            errors.append("Inside 'voices', key 'narrator' is missing")
+
+    if native_lang in data and target_lang in data:
+        len_native = len(data[native_lang])
+        len_target = len(data[target_lang])
+        if len_native != len_target:
+            errors.append(
+                f"Sentence count mismatch: '{native_lang}' has {len_native}, "
+                f"'{target_lang}' has {len_target}"
+            )
+
+    tw_native_key = f"target_words_{native_lang}"
+    tw_target_key = f"target_words_{target_lang}"
+    if tw_native_key in data and tw_target_key in data:
+        if len(data[tw_native_key]) != len(data[tw_target_key]):
+            errors.append(
+                f"Target word count mismatch between '{native_lang}' and '{target_lang}'"
+            )
+
+    if errors:
+        print("\n❌ Errors found in the AI-generated JSON:")
+        for err in errors:
+            print(f"   • {err}")
+        print("\n💡 Tip: Ask the LLM to regenerate using the exact prompt from the README.")
+        print("   Or fix the JSON file manually.")
+        sys.exit(1)
+
 
 PROMPT_TEMPLATE = """You are a linguist specialized in creating language courses with a focus on audio and spaced repetition (Pimsleur style). 
 
@@ -96,25 +139,31 @@ async def main():
     if args.json:
         try:
             curso_data = json.loads(args.json)
-        except json.JSONDecodeError:
-            print("Error: The provided --json string is not a valid JSON.")
+        except json.JSONDecodeError as e:
+            print(f"❌ JSON syntax error in --json string (likely a missing comma or quote):")
+            print(f"   {e}")
+            print("\n💡 Tip: Paste the JSON into https://jsonlint.com to find the issue.")
             sys.exit(1)
         output_filename = "lesson.mp3"
     else:
         json_filepath = args.file
         if not os.path.exists(json_filepath):
-            print(f"Error: The file '{json_filepath}' was not found.")
+            print(f"❌ Error: File '{json_filepath}' not found.")
             sys.exit(1)
 
         with open(json_filepath, "r", encoding="utf-8") as f:
             try:
                 curso_data = json.load(f)
-            except json.JSONDecodeError:
-                print(f"Error: The file '{json_filepath}' is not a valid JSON.")
+            except json.JSONDecodeError as e:
+                print(f"❌ JSON syntax error in '{json_filepath}' (likely a missing comma or quote):")
+                print(f"   {e}")
+                print("\n💡 Tip: Paste the JSON into https://jsonlint.com to find the issue.")
                 sys.exit(1)
 
         base_name = os.path.splitext(os.path.basename(json_filepath))[0]
         output_filename = f"{base_name}.mp3"
+
+    validate_lesson_json(curso_data, args.native, args.target)
 
     clear_cache()
     os.makedirs(AUDIO_CACHE_DIR, exist_ok=True)
@@ -124,6 +173,13 @@ async def main():
             curso_data, args.native, args.target, output_filename
         )
         await generator.build_lesson()
+    except KeyError as e:
+        print(f"❌ JSON structure error: key {e} not found.")
+        print("   This usually happens when the LLM didn't follow the exact format.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Unexpected error during generation: {type(e).__name__}: {e}")
+        sys.exit(1)
     finally:
         clear_cache()
 
