@@ -1,0 +1,4 @@
+edge-tts
+pydub
+nest_asyncio
+audioop-lts

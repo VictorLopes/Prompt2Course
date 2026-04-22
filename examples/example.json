@@ -1,0 +1,19 @@
+{
+    "pt_br": [ 
+        { "person_1": "Olá" }, 
+        { "person_2": "Como vai?" },  
+        { "person_2": "Você viu a notícia hoje?" } 
+    ],
+    "en_us": [ 
+        { "person_1": "Hi" }, 
+        { "person_2": "How are you?" },  
+        { "person_2": "Did you see the news today?" } 
+    ],
+    "target_words_pt_br": ["ver", "notícia", "hoje"],
+    "target_words_en_us": ["see", "news", "today"],
+    "voices": {
+        "narrator": "pt-BR-AntonioNeural",
+        "person_1": "en-US-JennyNeural",
+        "person_2": "en-US-GuyNeural"
+    }
+}

@@ -1,0 +1,25 @@
+{
+"pt_br": [
+{ "person_1": "Olá, eu gostaria de fazer o check-in, por favor." },
+{ "person_2": "Com certeza. Posso ver seu passaporte?" },
+{ "person_1": "Aqui está. Além disso, qual é a senha do Wi-Fi?" },
+{ "person_2": "Está neste cartão. O sinal é muito forte no quarto." },
+{ "person_1": "Perfeito, obrigado pela sua ajuda." },
+{ "person_2": "De nada. Tenha uma ótima estadia." }
+],
+"en_us": [
+{ "person_1": "Hello, I would like to check in, please." },
+{ "person_2": "Certainly. May I see your passport?" },
+{ "person_1": "Here it is. Also, what is the Wi-Fi password?" },
+{ "person_2": "It is on this card. The signal is very strong in the room." },
+{ "person_1": "Perfect, thank you for your help." },
+{ "person_2": "You are welcome. Have a great stay." }
+],
+"target_words_pt_br": ["fazer o check-in", "senha", "sinal", "estadia", "além disso"],
+"target_words_en_us": ["check in", "password", "signal", "stay", "also"],
+"voices": {
+"narrator": "pt-BR-AntonioNeural",
+"person_1": "en-US-JennyNeural",
+"person_2": "en-US-GuyNeural"
+}
+}
